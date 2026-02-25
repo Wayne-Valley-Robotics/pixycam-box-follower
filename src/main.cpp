@@ -6,7 +6,7 @@
 Blink blink(LED_BUILTIN);
 
 void setup() {
-  // put your setup code here, to run once:
+  
   
 }
 
@@ -15,5 +15,3 @@ void loop() {
   blink.changeState();
   delay(1000);
 }
-
-// put function definitions here:
