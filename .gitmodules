@@ -1,4 +1,3 @@
 [submodule "lib/WVNJRC-2025-Scheduler"]
 	path = lib/WVNJRC-2025-Scheduler
 	url = https://github.com/Wayne-Valley-Robotics/WVNJRC-2025-Scheduler
-	branch = development
