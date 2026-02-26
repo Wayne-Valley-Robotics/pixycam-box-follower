@@ -1,17 +1,16 @@
 #include <Arduino.h>
-#include "blink.h"
+#include "scheduler.h"
 
-// put function declarations here:
+SCHEDULER s;
 
-Blink blink(LED_BUILTIN);
-
-void setup() {
-  
-  
+void setup()
+{
+  Serial.begin(115200);
+  s.scheduleCH(Status_Light, 1000);
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
-  blink.changeState();
+void loop()
+{
+  s.cycle();
   delay(1000);
 }
