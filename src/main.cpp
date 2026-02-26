@@ -8,7 +8,7 @@ void setup()
 {
   Serial.begin(115200);
   s.schedulePI(Status::light, 255);
-  s.schedulePI(Status::surfaceDetection, 150);
+  s.schedulePI(Status::initSurfaceDetection, 150);
 }
 
 void loop()

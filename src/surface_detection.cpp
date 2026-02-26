@@ -1,39 +1,63 @@
 #include <Arduino.h>
 #include <Arduino_LSM6DS3.h>
+#include "IMU_interface.h"
 
-namespace surface_detection {
-
-// Initialize the onboard IMU
-bool initIMU()
+namespace surface_detection
 {
-    if (!IMU.begin()) {
-        return false;
+
+    bool onSurface;
+    bool level()
+    {
+        int maxRadDeviation = 10;
+        using namespace IMU_interface;
+        static float gx1, gy1, gz1;
+        float gx2, gy2, gz2;
+        if (readGyroscope(gx2, gy2, gz2))
+        {
+            onSurface = ((gx2 + gy2 + gz2) > 10);
+        }
+
+        // for all things checkDeviation
+        float dimensions[3] = {gx2, gy2, gz2};
+        int cachedDimensions[3] = {gx1, gy1, gz1};
+        for(int i = 0; i <= 3, )
+        checkDeviation(gx1, gx2, maxRadDeviation);
+
+        // cache new values
+        gx1 = gx2;
+        gy1 = gy2;
+        gz1 = gz2;
+        return onSurface;
     }
 
-    // Optionally enable the built-in sampling (not required here).
-    // Leave default ranges and data rates as configured by the library.
-    return true;
-}
+    // check if delta from a to b is greater than maxDeviation
+    bool checkDeviation(int a, int b, int maxDeviation)
+    {
+        return (abs(b) - abs(a)) > abs(maxDeviation);
+    }
 
-// Read acceleration in m/s^2. Returns true if data was read.
-bool readAcceleration(float &ax, float &ay, float &az)
-{
-    if (!IMU.accelerationAvailable()) return false;
-    return IMU.readAcceleration(ax, ay, az);
-}
+    bool inAir()
+    {
+        // there are more factors that should be
+        // evaluated, but this is enough for now
+        return level();
+    }
 
-// Read gyroscope in rad/s. Returns true if data was read.
-bool readGyroscope(float &gx, float &gy, float &gz)
-{
-    if (!IMU.gyroscopeAvailable()) return false;
-    return IMU.readGyroscope(gx, gy, gz);
-}
+    bool initSurfaceDetection()
+    {
+        return IMU_interface::initIMU();
+    }
 
-// Read temperature in degrees Celsius. Returns true if data was read.
-bool readTemperature(float &t)
-{
-    if (!IMU.temperatureAvailable()) return false;
-    return IMU.readTemperature(t);
-}
+    void surfaceDetection()
+    {
+        if (inAir())
+        {
+            Serial.println("put me down!");
+        }
+        else
+        {
+            Serial.println("yay");
+        }
+    }
 
 } // namespace surface_detection
