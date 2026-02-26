@@ -3,11 +3,9 @@
 
 namespace surface_detection {
 
-// Initialize the onboard IMU (LSM6DS3) on the Nano 33 IoT.
-// Returns true on success, false on failure.
+// Initialize the onboard IMU
 bool initIMU()
 {
-    // IMU.begin() returns true when the sensor is found and initialized
     if (!IMU.begin()) {
         return false;
     }

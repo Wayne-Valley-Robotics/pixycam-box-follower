@@ -1,2 +1,6 @@
 #pragma once
-void StatusLight();
+namespace Status{
+    void light();
+    bool pickedUp();
+    void initSurfaceDetection();
+}

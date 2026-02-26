@@ -1,3 +1,3 @@
 #pragma once
-#include "Scheduler.h"
-SCHEDULER s;
+#include "scheduler.h"
+extern SCHEDULER s;
