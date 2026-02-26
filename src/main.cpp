@@ -1,16 +1,14 @@
 #include <Arduino.h>
-#include "scheduler.h"
-
-SCHEDULER s;
+#include "globals.h"
+#include "status.h"
 
 void setup()
 {
   Serial.begin(115200);
-  s.scheduleCH(Status_Light, 1000);
+  s.schedulePI(Status::Light, 400);
 }
 
 void loop()
 {
   s.cycle();
-  delay(1000);
 }

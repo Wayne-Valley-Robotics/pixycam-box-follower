@@ -1,6 +1,15 @@
+#include "globals.h"
 #include <blink.h>
-Blink blink(LED_BUILTIN);
-void StatusLight()
-{
-    blink.changeState();
+
+namespace Status {
+    Blink blink(LED_BUILTIN);
+    void Light()
+    {
+        blink.changeState();
+        s.scheduleCH(Light, 1000);
+    }
+    
+    void PickedUp() {
+        //gresbe
+    }
 }
