@@ -4,6 +4,8 @@ namespace STATUS
 {
     namespace LED
     {
+        int fallbackPulseSpeed = 4000;
+
         void lock();
         void unlock();
         void calibration(int speed);

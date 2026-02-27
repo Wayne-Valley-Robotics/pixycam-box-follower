@@ -11,10 +11,10 @@ namespace surface_detection
         return (abs(b) - abs(a)) > abs(maxDeviation);
     }
 
+    int maxRadDeviation;
     bool isLevel()
     {
         static bool level;
-        int maxRadDeviation = 10;
         using namespace IMU_interface;
         static float gx1, gy1, gz1;
         float gx2, gy2, gz2;
@@ -51,12 +51,12 @@ namespace surface_detection
     {
         if (inAir())
         {
-            STATUS::LED::unlock();
+            STATUS::LED::blink(500);
             Serial.println(F("put me down!"));
         }
         else
         {
-            STATUS::LED::blink(500);
+            STATUS::LED::unlock();
             Serial.println(F("yay"));
         }
         s.scheduleCH(surfaceDetection, 250);
@@ -71,7 +71,7 @@ namespace surface_detection
             STATUS::LED::unlock();
             return true;
         }
-        STATUS::LED::blink(150);
+        STATUS::LED::blink(400);
         return false;
     }
 

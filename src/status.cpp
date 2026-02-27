@@ -46,12 +46,14 @@ namespace STATUS
         }
     }
 
+    int fallbackPulseSpeed;
+
     void ledPatternFallback()
     {
         if (!LED::lockState)
         {
             // manually define speed to skip locking
-            LED::speed = 4000;
+            LED::speed = fallbackPulseSpeed;
             LED::calibration();
         }
     }
