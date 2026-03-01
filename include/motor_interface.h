@@ -11,5 +11,6 @@ const uint8_t R_B = 10;
 namespace motor_interface
 {
     void init();
+    void drive(int speedL, int speedR);
     void test();
 }
