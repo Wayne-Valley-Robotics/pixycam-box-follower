@@ -8,14 +8,14 @@ namespace STATUS
     bool initializedIMU;
     namespace LED
     {
-        bool lockState = false;
-        void lock()
+        int lockState = 0;
+        void lock(int pattern)
         {
-            lockState = true;
+            lockState = pattern;
         }
         void unlock()
         {
-            lockState = false;
+            lockState = 0;
             s.scheduleRT(ledPatternFallback);
         }
         LED_PATTERNS statusLED;
@@ -23,45 +23,96 @@ namespace STATUS
         // initialize pattern
         void calibration(int speed_)
         {
+            lock(2);
             analogWrite(LED_BUILTIN, statusLED.pulse());
-            lock();
             speed = 255 / speed_;
             s.scheduleCH(calibration, speed);
         }
         void calibration()
         {
-            analogWrite(LED_BUILTIN, statusLED.pulse());
-            s.scheduleCH(calibration, speed);
+            if (lockState == 2)
+            {
+                analogWrite(LED_BUILTIN, statusLED.pulse());
+                s.scheduleCH(calibration, speed);
+            }
         }
         // initialize pattern
         void blink(int speed_)
         {
-            analogWrite(LED_BUILTIN, statusLED.blink());
+            lock(1);
+            digitalWrite(LED_BUILTIN, statusLED.blink());
             speed = speed_;
             s.scheduleCH(blink, speed);
         }
         void blink()
         {
-            analogWrite(LED_BUILTIN, statusLED.blink());
+            if (lockState == 1)
+            {
+                digitalWrite(LED_BUILTIN, statusLED.blink());
+                s.scheduleCH(blink, speed);
+            }
         }
     }
 
-    int fallbackPulseSpeed;
-
+    bool ledPatternFallbackActive = false;
+    void ledPatternFallbackProc()
+    {
+        if (LED::lockState == 0)
+        {
+            ledPatternFallbackActive = true;
+            // manually change state to skip lock()
+            // digitalWrite(LED_BUILTIN, LED::statusLED.pulse());
+            digitalWrite(LED_BUILTIN, LED::statusLED.blink());
+            // s.scheduleCH(ledPatternFallbackProc, (255 / LED::fallbackPulseSpeed));
+            s.scheduleCH(ledPatternFallbackProc, (LED::fallbackPulseSpeed));
+        }
+        else
+        {
+            ledPatternFallbackActive = false;
+        }
+    }
+    void ledPatternFallbackChron()
+    {
+        if (LED::lockState == 0)
+        {
+            if (!ledPatternFallbackActive)
+            {
+                Serial.println("Idling");
+                ledPatternFallbackProc();
+            }
+        }
+        s.scheduleCH(ledPatternFallbackChron, 250);
+    }
     void ledPatternFallback()
     {
-        if (!LED::lockState)
+        static bool running;
+
+        if (!running)
         {
-            // manually define speed to skip locking
-            LED::speed = fallbackPulseSpeed;
-            LED::calibration();
+            ledPatternFallbackChron();
+            running = true;
+        }
+        else
+        {
+            if (!ledPatternFallbackActive)
+            {
+                ledPatternFallbackProc();
+            }
         }
     }
 
     void initSurfaceDetection()
     {
         if (surface_detection::initSurfaceDetection())
+        {
+            Serial.println("Initialized IMU!");
             s.schedulePI(surface_detection::surfaceDetection, 200);
+        }
+        else
+        {
+            Serial.println("Failed to initialize IMU!");
+            LED::blink(800);
+        }
     }
     bool inAir()
     {
@@ -69,6 +120,7 @@ namespace STATUS
     }
     void init()
     {
-        s.schedulePI(initSurfaceDetection, 150);
+        ledPatternFallback();
+        // s.schedulePI(initSurfaceDetection, 150);
     }
 }

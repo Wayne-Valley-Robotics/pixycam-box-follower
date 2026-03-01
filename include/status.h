@@ -4,7 +4,7 @@ namespace STATUS
 {
     namespace LED
     {
-        int fallbackPulseSpeed = 4000;
+        const int fallbackPulseSpeed = 3000;
 
         void lock();
         void unlock();

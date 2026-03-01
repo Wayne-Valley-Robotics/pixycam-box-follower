@@ -24,9 +24,10 @@ int LED_PATTERNS::pulse()
         lastPattern = 2;
     }
     // reverse direction at limit
-    if (strength < 255 || strength < 0)
-        direction = !direction;
+    if (strength <= 0)
+        direction = 1;
+    if (strength >= 255)
+        direction = 0;
     strength += 1 * (direction ? 1 : -1);
-
     return strength;
 }

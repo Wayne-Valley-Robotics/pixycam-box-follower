@@ -4,7 +4,7 @@
 class LED_PATTERNS
 {
 private:
-    int lastPattern = 0;
+    int lastPattern;
 
 public:
     int blink();

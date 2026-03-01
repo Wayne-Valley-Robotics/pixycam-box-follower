@@ -8,30 +8,35 @@ namespace sensor_interface
 
     QTRSensors qtr;
 
-    const uint8_t SensorCount = 8;
+    extern const uint8_t SensorCount;
+    extern const uint8_t EmitterPin;
+    extern const uint8_t SensorPins[SensorCount];
     uint16_t sensorValues[SensorCount];
-    const uint8_t SensorPins[SensorCount];
 
     // linePosition result from 0-8000
     uint16_t position = 0;
 
     uint16_t calibrationIterations = 0;
-
+    bool calibrated = false;
 
     void init()
     {
         // configure the sensors
         qtr.setTypeAnalog();
         qtr.setSensorPins(SensorPins, SensorCount);
-        qtr.setEmitterPin(2);
+        qtr.setEmitterPin(EmitterPin);
 
-        STATUS::LED::blink(100); // blink 5 times on boot
+        STATUS::LED::blink(100);             // blink 5 times on boot
         s.scheduleCH(beginCalibration, 500); // keep this value
     }
     void beginCalibration()
     {
-        STATUS::LED::calibration(2000);
-
+        Serial.println("Beginning Sensor Calibration...");
+        STATUS::LED::blink(3000);
+        s.scheduleRT(calibrationProc);
+    }
+    void calibrationProc()
+    {
         // analogRead() takes about 0.1 ms on an AVR.
         // 0.1 ms per sensor * 4 samples per sensor read (default) * 8 sensors
         // * 10 reads per calibrate() call = ~32 ms per calibrate() call.
@@ -39,16 +44,36 @@ namespace sensor_interface
 
         if (calibrationIterations <= 400)
         {
-            qtr.calibrate();
+            if (calibrationIterations % 4 == 0)
+                Serial.print("#");
+
+                qtr.calibrate();
             calibrationIterations++;
-            s.scheduleRT(beginCalibration);
-        } else {
+            s.scheduleRT(calibrationProc);
+        }
+        else
+        {
+            calibrated = true;
+            Serial.println("\nCalibrated Sensor Array.");
             STATUS::LED::unlock();
         }
     }
 
-    void linePosition()
+    uint16_t getLinePosition()
     {
+        if (!calibrated)
+        {
+            return 0;
+        }
+        return position;
+    }
+
+    void findLinePosition()
+    {
+        if (!calibrated)
+        {
+            return;
+        }
         // read calibrated sensor values and obtain a measure of the line position
         // from 0 to 5000 (for a white line, use readLineWhite() instead)
         position = qtr.readLineBlack(sensorValues);
@@ -64,5 +89,20 @@ namespace sensor_interface
         Serial.println(position);
 
         s.scheduleCH(linePosition, 250); // do not change value
+    }
+    void printValues()
+    {
+        if (!calibrated)
+        {
+            return;
+        }
+        // Read from each sensor
+        qtr.read(sensorValues);
+        for (uint8_t i = 0; i < SensorCount; i++)
+        {
+            Serial.print(sensorValues[i]);
+            Serial.print(",");
+        }
+        Serial.println();
     }
 }

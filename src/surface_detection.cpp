@@ -59,7 +59,7 @@ namespace surface_detection
             STATUS::LED::unlock();
             Serial.println(F("yay"));
         }
-        s.scheduleCH(surfaceDetection, 250);
+        // s.scheduleCH(surfaceDetection, 250);
     }
 
     // initialize IMU and surface detection. returns false on failure to initialize IMU.
@@ -67,11 +67,9 @@ namespace surface_detection
     {
         if (IMU_interface::initIMU())
         {
-            s.schedulePI(surfaceDetection, 40);
             STATUS::LED::unlock();
             return true;
         }
-        STATUS::LED::blink(400);
         return false;
     }
 
