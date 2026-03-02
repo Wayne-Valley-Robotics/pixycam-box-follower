@@ -32,8 +32,8 @@ namespace line_follower
         int linePosition = sensor_interface::getLinePosition();
         int favor = map(linePosition, 0, 8000, -255, 255);
 
-        int favorL = 255 - constrain(favor, 0, 255);
-        int favorR = 255 - abs(constrain(favor, -255, 0));
+        int favorL = maxSpeed - constrain(favor, minSpeed, maxSpeed);
+        int favorR = maxSpeed - abs(constrain(favor, -maxSpeed, minSpeed));
 
         drive(favorL, favorR);
     }
