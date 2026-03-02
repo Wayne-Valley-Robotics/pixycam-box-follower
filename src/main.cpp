@@ -3,7 +3,10 @@
 #include "status.h"
 #include "sensor_interface.h"
 #include "motor_interface.h"
+#include "line_follower.h"
 SCHEDULER s;
+
+void printValues();
 
 void setup()
 {
@@ -13,11 +16,17 @@ void setup()
   delay(5000);
   Serial.println("Hello!");
   s.scheduleRT(STATUS::init);
-  // s.scheduleCH(sensor_interface::init, 200); // value can be changed
-  s.scheduleCH(motor_interface::init, 2000);
+  s.scheduleRT(motor_interface::init);       // simple
+  s.scheduleCH(sensor_interface::init, 200); // value can be changed
+  s.scheduleCH(line_follower::init, 15000);  // sensor takes forever anyway
 }
 
 void loop()
 {
   s.cycle();
+}
+
+void printValues()
+{
+  sensor_interface::printValues();
 }

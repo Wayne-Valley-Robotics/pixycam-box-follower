@@ -8,9 +8,13 @@ namespace sensor_interface
 
     extern uint16_t position;
     void init();
+    bool isCalibrated();
     void beginCalibration();
     void calibrationProc();
-    void linePosition();
+    // retrieve latest stored line position from 0 to 8000
+    uint16_t getLinePosition();
+    // do not call
+    void findLinePosition();
     // print values from each sensor
     void printValues();
 }

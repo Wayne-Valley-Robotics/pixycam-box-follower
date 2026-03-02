@@ -11,7 +11,7 @@ namespace motor_interface
         pinMode(L_B, OUTPUT);
         pinMode(R_F, OUTPUT);
         pinMode(R_B, OUTPUT);
-        s.schedulePI(test, 80);
+        // s.schedulePI(test, 80);
     }
     void test()
     {
@@ -65,5 +65,9 @@ namespace motor_interface
         analogWrite(L_B, speeds.L_B);
         analogWrite(R_F, speeds.R_F);
         analogWrite(R_B, speeds.R_B);
+    }
+    void brake()
+    {
+        drive(0, 0);
     }
 }

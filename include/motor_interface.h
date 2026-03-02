@@ -12,5 +12,6 @@ namespace motor_interface
 {
     void init();
     void drive(int speedL, int speedR);
+    void brake();
     void test();
 }

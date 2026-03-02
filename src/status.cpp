@@ -23,10 +23,13 @@ namespace STATUS
         // initialize pattern
         void calibration(int speed_)
         {
-            lock(2);
-            analogWrite(LED_BUILTIN, statusLED.pulse());
             speed = 255 / speed_;
-            s.scheduleCH(calibration, speed);
+            if (lockState != 2)
+            {
+                lock(2);
+                analogWrite(LED_BUILTIN, statusLED.pulse());
+                s.scheduleCH(calibration, speed);
+            }
         }
         void calibration()
         {
@@ -39,10 +42,13 @@ namespace STATUS
         // initialize pattern
         void blink(int speed_)
         {
-            lock(1);
-            digitalWrite(LED_BUILTIN, statusLED.blink());
             speed = speed_;
-            s.scheduleCH(blink, speed);
+            if (lockState != 1)
+            {
+                lock(1);
+                digitalWrite(LED_BUILTIN, statusLED.blink());
+                s.scheduleCH(blink, speed);
+            }
         }
         void blink()
         {
@@ -111,16 +117,12 @@ namespace STATUS
         else
         {
             Serial.println("Failed to initialize IMU!");
-            LED::blink(800);
+            LED::blink(100);
         }
-    }
-    bool inAir()
-    {
-        return surface_detection::inAir();
     }
     void init()
     {
         ledPatternFallback();
-        // s.schedulePI(initSurfaceDetection, 150);
+        // s.scheduleCH(initSurfaceDetection, 150);
     }
 }
