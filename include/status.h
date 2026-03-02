@@ -15,4 +15,5 @@ namespace STATUS
     }
     void ledPatternFallback();
     void init();
+    bool ready();
 }

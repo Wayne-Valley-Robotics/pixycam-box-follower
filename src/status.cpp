@@ -1,5 +1,6 @@
 #include "globals.h"
 #include <LED_patterns.h>
+#include "sensor_interface.h"
 #include "surface_detection.h"
 #include "status.h"
 extern SCHEDULER s;
@@ -124,5 +125,12 @@ namespace STATUS
     {
         ledPatternFallback();
         // s.scheduleCH(initSurfaceDetection, 150);
+    }
+    bool ready()
+    {
+        int readyScore = 0;
+        readyScore += !surface_detection::inAir;
+        readyScore += sensor_interface::isCalibrated();
+        return readyScore >= 1;
     }
 }
