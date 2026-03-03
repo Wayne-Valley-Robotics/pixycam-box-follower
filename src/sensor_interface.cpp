@@ -39,6 +39,7 @@ namespace sensor_interface
         if (!surface_detection::inAir)
         {
             Serial.println("Beginning Sensor Calibration...");
+            STATUS::endSurfaceDetection();
             STATUS::LED::blink(500);
             s.scheduleRT(calibrationProc);
         }
@@ -77,6 +78,7 @@ namespace sensor_interface
                 calibrated = true;
                 Serial.println(F("\nCalibrated Sensor Array."));
                 STATUS::LED::unlock();
+                STATUS::initSurfaceDetection();
                 s.scheduleRT(findLinePosition);
             }
         }

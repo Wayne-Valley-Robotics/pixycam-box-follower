@@ -8,4 +8,5 @@ namespace surface_detection
     extern bool inAir;
     void surfaceDetection();
     bool initSurfaceDetection();
+    void endSurfaceDetection();
 }

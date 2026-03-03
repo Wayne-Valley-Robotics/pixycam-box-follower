@@ -24,7 +24,21 @@ namespace line_follower
         else
         {
             brake();
-            s.scheduleCH(checkReady, 2000);
+            Serial.println("Paused line following.");
+            s.schedulePI(waitReady, 255);
+        }
+    }
+    // ensure 2 seconds have passed
+    void waitReady()
+    {
+        if (STATUS::ready())
+        {
+            Serial.println("Resumed line following.");
+            s.scheduleCH(checkReady, waitReadyDelay);
+        }
+        else
+        {
+            s.schedulePI(checkReady, 251);
         }
     }
     void veerToLine()
@@ -32,8 +46,8 @@ namespace line_follower
         int linePosition = sensor_interface::getLinePosition();
         int favor = map(linePosition, 0, 8000, -255, 255);
 
-        int favorL = maxSpeed - constrain(favor, minSpeed, maxSpeed);
-        int favorR = maxSpeed - abs(constrain(favor, -maxSpeed, minSpeed));
+        int favorL = maxSpeed - (constrain(favor, minSpeed, maxSpeed) * sensitivityMultiplier);
+        int favorR = maxSpeed - (abs(constrain(favor, -maxSpeed, -minSpeed)) * sensitivityMultiplier);
 
         drive(favorL, favorR);
     }

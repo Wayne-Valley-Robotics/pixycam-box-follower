@@ -16,4 +16,6 @@ namespace STATUS
     void ledPatternFallback();
     void init();
     bool ready();
+    void initSurfaceDetection();
+    void endSurfaceDetection();
 }

@@ -9,6 +9,10 @@ namespace IMU_interface
     {
         return IMU.begin();
     }
+    void endIMU()
+    {
+        IMU.end();
+    }
 
     // Read acceleration in m/s^2. Returns true if data was read.
     bool readAcceleration(float &ax, float &ay, float &az)

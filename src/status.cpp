@@ -113,7 +113,6 @@ namespace STATUS
         if (surface_detection::initSurfaceDetection())
         {
             Serial.println("Initialized IMU!");
-            s.schedulePI(surface_detection::surfaceDetection, 200);
         }
         else
         {
@@ -121,10 +120,15 @@ namespace STATUS
             LED::blink(100);
         }
     }
+    void endSurfaceDetection()
+    {
+        surface_detection::endSurfaceDetection();
+        Serial.println("Disabled IMU.");
+    }
     void init()
     {
         ledPatternFallback();
-        // s.scheduleCH(initSurfaceDetection, 150);
+        s.scheduleCH(initSurfaceDetection, 80);
     }
     bool ready()
     {

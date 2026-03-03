@@ -6,6 +6,7 @@
 
 namespace surface_detection
 {
+    bool active = false;
     bool inAir = false;
 
     // check if delta from a to b is greater than maxDeviation
@@ -110,7 +111,8 @@ namespace surface_detection
                 maxAccDeviation = maxAccDeviationPickUp;
             }
         }
-        s.scheduleCH(surfaceDetection, 250);
+        if (active)
+            s.scheduleCH(surfaceDetection, 250);
     }
 
     // initialize IMU and surface detection. returns false on failure to initialize IMU.
@@ -118,10 +120,17 @@ namespace surface_detection
     {
         if (IMU_interface::initIMU())
         {
-            STATUS::LED::unlock();
+            // STATUS::LED::unlock(); // why is this here?
+            active = true;
+            s.schedulePI(surface_detection::surfaceDetection, 200);
             return true;
         }
         return false;
+    }
+    void endSurfaceDetection()
+    {
+        IMU_interface::endIMU();
+        active = false;
     }
 
 } // namespace surface_detection
