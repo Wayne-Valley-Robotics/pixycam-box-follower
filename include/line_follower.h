@@ -9,5 +9,7 @@ namespace line_follower
     const int sensitivityMultiplier = 1;
     const int waitReadyDelay = 2000;
     void init();
+    void checkReady();
+    void waitReady();
     void veerToLine();
 }
