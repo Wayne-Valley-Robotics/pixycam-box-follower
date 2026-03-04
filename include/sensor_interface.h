@@ -2,6 +2,7 @@
 #include "Arduino.h"
 namespace sensor_interface
 {
+    const int calibrationMotorSpeed = 150;
     const uint8_t SensorCount = 8;
     const uint8_t EmitterPin = 7;
     const uint8_t SensorPins[SensorCount] = {A0, A1, A2, A3, A4, A5, A7};

@@ -38,7 +38,7 @@ namespace line_follower
         }
         else
         {
-            s.schedulePI(checkReady, 251);
+            s.schedulePI(waitReady, 251);
         }
     }
     void veerToLine()

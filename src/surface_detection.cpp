@@ -52,7 +52,7 @@ namespace surface_detection
     {
         static bool acc;
         using namespace IMU_interface;
-        static float ax1, ay1, az1;
+        // static float ax1, ay1, az1;
         float ax2, ay2, az2;
         // int out = IMU.accelerationAvailable();
         // Serial.println(out);
@@ -83,8 +83,8 @@ namespace surface_detection
         IMU.readAcceleration(ax2, ay2, az2);
         acc = (-az2 < (1 - maxAccDeviation));
 
-        if (acc)
-            Serial.println(-az2);
+        // if (acc)
+        //     Serial.println(-az2);
 
         return acc;
     }

@@ -4,6 +4,7 @@
 #include "globals.h"
 #include "status.h"
 #include <surface_detection.h>
+#include <motor_interface.h>
 namespace sensor_interface
 {
 
@@ -41,6 +42,7 @@ namespace sensor_interface
             Serial.println("Beginning Sensor Calibration...");
             STATUS::endSurfaceDetection();
             STATUS::LED::blink(500);
+            motor_interface::drive(-calibrationMotorSpeed, calibrationMotorSpeed);
             s.scheduleRT(calibrationProc);
         }
         else
