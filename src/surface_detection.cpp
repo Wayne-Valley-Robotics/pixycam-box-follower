@@ -7,7 +7,7 @@
 namespace surface_detection
 {
     bool active = false;
-    bool inAir = false;
+    bool inAir = true;
 
     // check if delta from a to b is greater than maxDeviation
     bool checkDeviation(int a, int b, int maxDeviation)

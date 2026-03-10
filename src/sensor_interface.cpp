@@ -28,9 +28,21 @@ namespace sensor_interface
         qtr.setSensorPins(SensorPins, SensorCount);
         qtr.setEmitterPin(EmitterPin);
 
-        STATUS::LED::blink(100);             // blink 5 times on boot
-        s.scheduleCH(beginCalibration, 500); // keep this value
+        STATUS::LED::blink(100);      // blink 5 times on boot
+        s.scheduleCH(waitReady, 500); // keep this value
     }
+    void waitReady()
+    {
+        if (!surface_detection::inAir)
+        {
+            s.scheduleCH(beginCalibration, waitReadyDelay);
+        }
+        else
+        {
+            s.schedulePI(waitReady, 253);
+        }
+    }
+
     bool isCalibrated()
     {
         return calibrated;

@@ -128,13 +128,13 @@ namespace STATUS
     void init()
     {
         ledPatternFallback();
-        s.scheduleCH(initSurfaceDetection, 80);
+        s.schedulePI(initSurfaceDetection, 13);
     }
     bool ready()
     {
         int readyScore = 0;
         readyScore += !surface_detection::inAir;
         readyScore += sensor_interface::isCalibrated();
-        return readyScore >= 1;
+        return readyScore == 2;
     }
 }
