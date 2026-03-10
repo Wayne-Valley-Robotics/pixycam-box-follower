@@ -11,5 +11,6 @@ namespace line_follower
     void init();
     void checkReady();
     void waitReady();
-    void veerToLine();
+    void followLine();
+    int p();
 }

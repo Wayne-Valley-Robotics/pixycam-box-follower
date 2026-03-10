@@ -8,9 +8,9 @@ namespace line_follower
     void init()
     {
         if (sensor_interface::isCalibrated())
-            s.scheduleCH(veerToLine, 2000);
+            s.scheduleCH(followLine, 2000);
         else
-            s.schedulePI(init, 250);
+            s.schedulePI(init, 253);
     }
     using namespace motor_interface;
 
@@ -18,14 +18,14 @@ namespace line_follower
     {
         if (STATUS::ready())
         {
-            veerToLine();
-            s.schedulePI(checkReady, 12);
+            followLine();
+            s.schedulePI(checkReady, 13);
         }
         else
         {
             brake();
             Serial.println("Paused line following.");
-            s.schedulePI(waitReady, 255);
+            s.schedulePI(waitReady, 247);
         }
     }
     // ensure 2 seconds have passed
@@ -33,7 +33,7 @@ namespace line_follower
     {
         if (STATUS::ready())
         {
-            Serial.println("Resumed line following.");
+            Serial.println("Resuming line following.");
             s.scheduleCH(checkReady, waitReadyDelay);
         }
         else
@@ -41,9 +41,16 @@ namespace line_follower
             s.schedulePI(waitReady, 251);
         }
     }
-    void veerToLine()
+
+    void followLine()
     {
         int linePosition = sensor_interface::getLinePosition();
+        p(linePosition);
+    }
+
+    int p(int linePosition)
+    {
+
         int favor = map(linePosition, 0, 8000, -255, 255);
 
         int favorL = maxSpeed - (constrain(favor, minSpeed, maxSpeed) * sensitivityMultiplier);
