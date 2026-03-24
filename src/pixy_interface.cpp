@@ -1,25 +1,47 @@
+#include "pixy_interface.h"
 #include <SPI.h>
 #include <Pixy.h>
 
 namespace pixy_interface
 {
     Pixy pixy;
+    int blocksDetected;
+    int biggestIndex = 0;
+    void findBiggestDetection()
+    {
+        biggestIndex = 0;
+        int biggestArea = 0;
+        for (int i = 0; i < blocksDetected; i++)
+        {
+            int area = pixy.blocks[i].width * pixy.blocks[i].height;
+            if (area > biggestArea)
+            {
+                biggestIndex = i;
+                biggestArea = area;
+            }
+        }
+        biggestDetection.x = pixy.blocks[biggestIndex].x;
+        biggestDetection.y = pixy.blocks[biggestIndex].y;
+        biggestDetection.width = pixy.blocks[biggestIndex].width;
+        biggestDetection.height = pixy.blocks[biggestIndex].height;
+    }
 
-    // make it easier
+    void tick()
+    {
+        // read from camera
+        blocksDetected = pixy.getBlocks();
+        // cache the index of the biggest block
+        findBiggestDetection();
+    }
+
     void test()
     {
-        int blocksDetected = pixy.getBlocks();
-        Serial.print(pixy.getBlocks() + " blocks detected.");
+        Serial.print(blocksDetected + " blocks detected.");
         for (int i = 0; i <= blocksDetected; i++)
         {
-            Serial.print("Block " + String(i) + ": ");
-            // return center of box. x: 0-319 y: 0-199
-            Serial.print("center: " + String(pixy.blocks[i].x) + ", " + String(pixy.blocks[i].y));
-            // return width and height, 1-320 and 1-200
-            Serial.print("dimensions: " + String(pixy.blocks[i].width) + ", " + String(pixy.blocks[i].height));
-            // bruh
-            // pixy.blocks[i].print();
-
+            if (i == biggestIndex)
+                Serial.print("!");
+            pixy.blocks[i].print();
         }
     }
 }

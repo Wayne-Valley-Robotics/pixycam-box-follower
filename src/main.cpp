@@ -17,5 +17,13 @@ void setup()
 
 void loop()
 {
+  pixy_interface::tick();
   pixy_interface::test();
+
+  int maxSpeed = 255;
+
+  int xBias = map(pixy_interface::biggestDetection.x, 0, 319, -maxSpeed, maxSpeed);
+  int speedL = maxSpeed - (abs(xBias) * xBias > 0);
+  int speedR = maxSpeed - (abs(xBias) * xBias < 0);
+  // motor_interface::drive(speedL,speedR);
 }
