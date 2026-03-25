@@ -1,0 +1,9 @@
+; copy this file and remove the succeeding .template'
+[secrets]
+build_flags =
+    -D WIFI_SSID=\"Your_SSID\"
+    -D WIFI_PASS=\"Your_Password\"
+    -D BOT_WIFI_NAME=\"pixybot\"
+    -D BOT_WIFI_UPLOAD_PASS=\"yay\"
+
+upload_port = pixybot.local
