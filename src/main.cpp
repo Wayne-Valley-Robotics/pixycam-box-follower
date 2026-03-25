@@ -2,6 +2,8 @@
 #include <motor_interface.h>
 #include <pixy_interface.h>
 
+const int maxSpeed = 255;
+
 void setup()
 {
   Serial.begin(115200);
@@ -12,18 +14,27 @@ void setup()
 
   // IMU_interface::init();
   motor_interface::init();
-  // pixy_interface::init();
 }
 
+bool warned = false;
 void loop()
 {
-  pixy_interface::tick();
-  pixy_interface::test();
+  if (pixy_interface::tick() == 0)
+  {
+    warned = false;
+    pixy_interface::test();
 
-  int maxSpeed = 255;
-
-  int xBias = map(pixy_interface::biggestDetection.x, 0, 319, -maxSpeed, maxSpeed);
-  int speedL = maxSpeed - (abs(xBias) * xBias > 0);
-  int speedR = maxSpeed - (abs(xBias) * xBias < 0);
-  // motor_interface::drive(speedL,speedR);
+    int xBias = map(pixy_interface::biggestDetection.x, 0, 319, -maxSpeed, maxSpeed);
+    int speedL = maxSpeed - (abs(xBias) * (xBias > 0));
+    int speedR = maxSpeed - (abs(xBias) * (xBias < 0));
+    // motor_interface::drive(speedL,speedR);
+  }
+  else
+  {
+    if (!warned)
+    {
+      Serial.println("No detection.");
+      warned = true;
+    }
+  }
 }

@@ -33,6 +33,7 @@ namespace motor_interface
             speeds.L_F = 0;
             speeds.L_B = abs(speedL);
         }
+
         if (speedR > 0)
         {
             speeds.R_F = abs(speedR);
@@ -49,6 +50,7 @@ namespace motor_interface
         analogWrite(R_F, speeds.R_F);
         analogWrite(R_B, speeds.R_B);
     }
+
     void brake()
     {
         drive(0, 0);

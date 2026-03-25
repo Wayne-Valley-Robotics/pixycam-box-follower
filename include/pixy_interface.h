@@ -13,6 +13,6 @@ namespace pixy_interface
         // return height from 1-200
         int height;
     } biggestDetection;
-    void tick();
+    int tick();
     void test();
 }

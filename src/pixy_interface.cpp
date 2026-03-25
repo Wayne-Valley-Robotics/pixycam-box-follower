@@ -26,12 +26,22 @@ namespace pixy_interface
         biggestDetection.height = pixy.blocks[biggestIndex].height;
     }
 
-    void tick()
+    int tick()
     {
         // read from camera
         blocksDetected = pixy.getBlocks();
-        // cache the index of the biggest block
-        findBiggestDetection();
+        if (blocksDetected > 0)
+        {
+            // cache the index of the biggest block
+            findBiggestDetection();
+            pixy.setLED(0, 255, 0);
+            return 0;
+        }
+        else
+        {
+            pixy.setLED(255, 0, 0);
+            return 1;
+        }
     }
 
     void test()
