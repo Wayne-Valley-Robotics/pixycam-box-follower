@@ -11,7 +11,25 @@ namespace motor_interface
 
     void drive(int speedL, int speedR)
     {
-        // TODO: analogWrite pwm pins based on inputs
+        if (speedL > 0)
+        {
+            analogWrite(L_F, speedL);
+            analogWrite(L_B, 0);
+        }
+        else
+        {
+            analogWrite(L_F, 0);
+            analogWrite(L_B, speedL);
+        }
+
+        if (speedR > 0) {
+            analogWrite(R_F, speedL);
+            analogWrite(R_B, 0);
+        }
+        else {
+            analogWrite(R_F, 0);
+            analogWrite(R_B, speedL);
+        }
     }
 
     void brake()
