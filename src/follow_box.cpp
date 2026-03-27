@@ -15,6 +15,7 @@ namespace follow_box
         else
             // no object is detected
             brake();
+        test();
     }
     void follow()
     {
