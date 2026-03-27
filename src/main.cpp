@@ -1,6 +1,6 @@
 #include <Arduino.h>
-#include <motor_interface.h>
-#include <follow_box.h>
+#include "motor_interface.h"
+#include "follow_box.h"
 
 const int maxSpeed = 255;
 
@@ -18,5 +18,5 @@ void setup()
 
 void loop()
 {
-  follow_box::follow();
+  follow_box::tick();
 }
