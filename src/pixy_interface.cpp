@@ -5,10 +5,12 @@
 namespace pixy_interface
 {
     Pixy pixy;
-    int blocksDetected;
+    int blocksDetected = 0;
     int biggestIndex = 0;
     void findBiggestDetection()
     {
+        if (blocksDetected == 0)
+            return;
         biggestIndex = 0;
         int biggestArea = 0;
         for (int i = 0; i < blocksDetected; i++)
@@ -26,7 +28,7 @@ namespace pixy_interface
         biggestDetection.height = pixy.blocks[biggestIndex].height;
     }
 
-    int tick()
+    bool poll()
     {
         // read from camera
         blocksDetected = pixy.getBlocks();
@@ -35,19 +37,19 @@ namespace pixy_interface
             // cache the index of the biggest block
             findBiggestDetection();
             pixy.setLED(0, 255, 0);
-            return 0;
+            return true;
         }
         else
         {
             pixy.setLED(255, 0, 0);
-            return 1;
+            return false;
         }
     }
 
     void test()
     {
         Serial.print(blocksDetected + " blocks detected.");
-        for (int i = 0; i <= blocksDetected; i++)
+        for (int i = 0; i < blocksDetected; i++)
         {
             if (i == biggestIndex)
                 Serial.print("!");
