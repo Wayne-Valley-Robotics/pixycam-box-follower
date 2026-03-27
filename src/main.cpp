@@ -1,6 +1,6 @@
 #include <Arduino.h>
-#include <motor_interface.h>
-#include <pixy_interface.h>
+#include "motor_interface.h"
+#include "follow_box.h"
 
 const int maxSpeed = 255;
 
@@ -16,25 +16,7 @@ void setup()
   motor_interface::init();
 }
 
-bool warned = false;
 void loop()
 {
-  if (pixy_interface::tick() == 0)
-  {
-    warned = false;
-    pixy_interface::test();
-
-    int xBias = map(pixy_interface::biggestDetection.x, 0, 319, -maxSpeed, maxSpeed);
-    int speedL = maxSpeed - (abs(xBias) * (xBias > 0));
-    int speedR = maxSpeed - (abs(xBias) * (xBias < 0));
-    // motor_interface::drive(speedL,speedR);
-  }
-  else
-  {
-    if (!warned)
-    {
-      Serial.println("No detection.");
-      warned = true;
-    }
-  }
+  follow_box::tick();
 }

@@ -13,6 +13,8 @@ namespace pixy_interface
         // return height from 1-200
         int height;
     } biggestDetection;
-    int tick();
+    // Poll new data from PixyCam. Returns true if an object is detected.
+    bool poll();
+    // Print debug data to Serial monitor. The biggest detection is prefixed with '!'
     void test();
 }
