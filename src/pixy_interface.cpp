@@ -48,7 +48,7 @@ namespace pixy_interface
 
     void test()
     {
-        Serial.print(blocksDetected + " blocks detected.");
+        Serial.print(String(blocksDetected) + " blocks detected.");
         for (int i = 0; i < blocksDetected; i++)
         {
             if (i == biggestIndex)
