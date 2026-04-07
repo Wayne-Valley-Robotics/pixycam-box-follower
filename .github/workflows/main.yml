@@ -31,6 +31,11 @@ jobs:
           fi
         shell: bash
 
+      - name: Create mock private.ini for CI build
+        run: |
+          cp private.ini.template private.ini
+        shell: bash
+
       - name: Cache PlatformIO
         uses: actions/cache@v4
         with:
@@ -53,3 +58,4 @@ jobs:
           echo "Building all environments defined in platformio.ini"
           # Use the python module runner to avoid PATH/launcher issues across OSes
           python -m platformio run
+
