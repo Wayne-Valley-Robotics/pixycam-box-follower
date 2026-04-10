@@ -9,8 +9,7 @@ namespace motor_interface
     // B2
     const uint8_t R_F = 5;
     // B1
-    const uint8_t R_B = 6;
-    // Configure pinModes
+    const uint8_t R_B = 9;
     void init();
     // Drive motors in either direction from -255 to 255
     void drive(int speedL, int speedR);
